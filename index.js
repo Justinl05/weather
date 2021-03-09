@@ -15,13 +15,12 @@ app.get("/", function(req, res) {
 app.post("/", function(req, res) {
     
     // takes in the zip from the html form, display in // console. Takes in as string, ex. for zip 02139
-        var zip = String(req.body.zipInput);
-        console.log(req.body.zipInput);
+        var cityId = 2172797;
     
     //build up the URL for the JSON query, API Key is // secret and needs to be obtained by signup 
         const units = "imperial";
-        const apiKey = "67f6b382921c1e89b39b20d4f9556f22";
-        const url = "https://api.openweathermap.org/data/2.5/weather?zip=" + zip +  "&units=" + units + "&APPID=" + apiKey;
+        const apiKey = "6d62f9a1bd46c03bae27d573ad2ca32e";
+        const url = "https://api.openweathermap.org/data/2.5/weather?id=" + cityId +  "&units=" + units + "&APPID=" + apiKey;
     
     // this gets the data from Open WeatherPI
     https.get(url, function(response){
@@ -35,11 +34,17 @@ app.post("/", function(req, res) {
             const weatherDescription = weatherData.weather[0].description;
             const icon = weatherData.weather[0].icon;
             const imageURL = "http://openweathermap.org/img/wn/" + icon + "@2x.png";
+            const windSpeed = weatherData.wind.speed;
+            const windDir = weatherData.wind.deg;
+            const clouds = weatherData.clouds.all;
             
             // displays the output of the results
             res.write("<h1> The weather is " + weatherDescription + "<h1>");
-            res.write("<h2>The Temperature in " + city + " " + zip + " is " + temp + " Degrees Fahrenheit<h2>");
+            res.write("<h2>The Temperature in " + city + " is " + temp + " Degrees Fahrenheit<h2>");
             res.write("<img src=" + imageURL +">");
+            res.write("<h2> The wind speed is " + windSpeed + "mph<h2>");
+            res.write("<h2> The wind direction will be " + windDir + " degrees<h2>");
+            res.write("<h2> And will be " + clouds + "% cloudiness<h2>");
             res.send();
         });
     });
